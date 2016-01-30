@@ -1,25 +1,53 @@
 package com.globettroter.ezequiel.globetrotter;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TabHost;
 import android.widget.TextView;
+
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+
 
 public class Mensaje extends AppCompatActivity {
 
     private Button button;
     private TextView textview;
+    private TextView score;
+    private TextView title;
+    private TextView facebookname;
+    private ImageView profileimageview;
+    private ImageView picture_score;
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -27,22 +55,110 @@ public class Mensaje extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mensaje);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+        Resources res = getResources();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        TabHost tabs=(TabHost)findViewById(android.R.id.tabhost);
+        tabs.setup();
 
+        TabHost.TabSpec spec=tabs.newTabSpec("hometab");
+        spec.setContent(R.id.hometab);
+        spec.setIndicator("Home",
+                res.getDrawable(android.R.drawable.ic_dialog_map));
+        tabs.addTab(spec);
+
+        spec=tabs.newTabSpec("placestab");
+        spec.setContent(R.id.placetab);
+        spec.setIndicator("Places",
+                res.getDrawable(android.R.drawable.ic_dialog_map));
+        tabs.addTab(spec);
+
+        spec=tabs.newTabSpec("markettab");
+        spec.setContent(R.id.markettab);
+        spec.setIndicator("Market",
+                res.getDrawable(android.R.drawable.ic_dialog_map));
+        tabs.addTab(spec);
+
+        tabs.setCurrentTab(0);
 
         button = (Button) findViewById(R.id.locacion);
-        textview = (TextView) findViewById(R.id.textview1);
+
+        final String id = getIntent().getStringExtra("id");
+        final String email = getIntent().getStringExtra("email");
+        final String name = getIntent().getStringExtra("name");
+        String users_score = getIntent().getStringExtra("score");
+        String users_title = getIntent().getStringExtra("title");
+
+        facebookname = (TextView) findViewById(R.id.textView2);
+        facebookname.setText(name);
+        score = (TextView) findViewById(R.id.score_txt_result);
+        score.setText("Score: "+users_score);
+        title = (TextView) findViewById(R.id.title_user);
+        title.setText(users_title);
+
+        picture_score = (ImageView) findViewById(R.id.picture_score);
+        //picture_score.setImageResource(R.mipmap.ic_beginner);
+
+        int resId = getResources().getIdentifier("ic_beginner", "mipmap", getPackageName());
+        picture_score.setImageResource(resId);
+
+
+
+        profileimageview = (ImageView) findViewById(R.id.imageView2);
+
+        Bundle params = new Bundle();
+        params.putString("fields", "picture.type(small)");
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+
+                        if (response != null) {
+                            try {
+                                JSONObject data = response.getJSONObject();
+                                if (data.has("picture")) {
+                                    String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                     new Profile_picture(profileimageview).execute(profilePicUrl);
+                                    // set profilePic bitmap to imageview
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                    }
+                }}).executeAsync();
+
+
+        //DATA FACEBOOK FRIENDS WITH THE APP
+        new facebook_friends().friends_get_points(AccessToken.getCurrentAccessToken());
+
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                textview.setText("\n "+location.getLatitude() +" "+location.getLongitude());
+
+                ProgressDialog pDialog = new ProgressDialog(Mensaje.this);
+                pDialog.setMessage("Getting your location, hold on!");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
+
+                Double lat = location.getLatitude();
+                Double lon = location.getLongitude();
+
+                String latitude = String.valueOf(lat);
+                String longitude = String.valueOf(lon);
+
+                pDialog.dismiss();
                 locationManager.removeUpdates(this);
+
+                //POINT OF INTEREST
+                new Point_of_interest(Mensaje.this).execute(id);
+                //Country - Continent - city
+                new EnviarDatos(Mensaje.this).execute(id,email, name,latitude, longitude);
+
             }
 
             @Override
@@ -64,9 +180,9 @@ public class Mensaje extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET
-                }, 10);
+              requestPermissions(new String[]{
+                      Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET
+              }, 10);
             return;
             }else{
                 configureButton();
@@ -94,8 +210,85 @@ public class Mensaje extends AppCompatActivity {
         });
 
             }
+    }
+
+    class EnviarDatos extends AsyncTask<String, String, JSONObject>{
+        private Context context;
+
+        public EnviarDatos(Context context){
+            this.context=context;
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+
+           return  enviarPost(params[0], params[1],params[2],params[3],params[4]);
+        }
+
+        protected void onPostExecute(JSONObject result){
+            //receive msg
+            //show up on the screen
+
+            if (result==null){
+                Log.e("ERROR", "Error al traer el objeto json");
+            }else{
+
+                try {
+                    Intent intent = new Intent(context, Popup.class);
+                    if (!"".equals(result.getString("message3"))){
+
+                        intent = new Intent(context, Popup.class);
+                        intent.putExtra("msg", result.getString("message3"));
+                        context.startActivity(intent);
+
+                    }
+                    if (!"".equals(result.getString("message3"))){
+
+                        intent = new Intent(context, Popup.class);
+                        intent.putExtra("msg", result.getString("message2"));
+                        context.startActivity(intent);
+
+                    }
+
+                    if (!"".equals(result.getString("message1"))){
+                    intent.putExtra("msg", result.getString("message1"));
+                    context.startActivity(intent);}
 
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+
+
+
+        public JSONObject enviarPost(String id, String email, String name, String latitude, String longitude) {
+            try {
+                HttpRequest con = new HttpRequest("http://192.168.0.114:80/android/Globetrotter/getpoints.php");
+
+                HashMap<String, String> params=new HashMap<>();
+                params.put("id", id);
+                params.put("email", email);
+                params.put("latitude", latitude);
+                params.put("longitude", longitude);
+
+                //con.preparePost().withData("id="+id+"&email="+email+"&name="+name+"&latitude="+latitude+"&longitude="+longitude).send();
+             JSONObject object = con.preparePost().withData(params).sendAndReadJSON();
+                return object;
+
+
+
+            }catch (Exception e) {
+                e.printStackTrace();
+                return null;
+
+            }
+
+
+        }
 
     }
 
