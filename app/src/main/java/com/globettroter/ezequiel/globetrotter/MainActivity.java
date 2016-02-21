@@ -21,6 +21,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_main);
 
-
+// IF USER IS ALREADY LOGGED IN
         if (isFacebookLoggedIn()) {
             Log.i("TAG", "logged in already");
 
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
             pDialog.setCancelable(true);
             pDialog.show();
 
+
+// RETRIEVING NAME/ID/EMAIL/PROFILE PICTURE FROM FACEBOOK
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
                     new GraphRequest.GraphJSONObjectCallback() {
@@ -70,15 +73,30 @@ public class MainActivity extends AppCompatActivity {
                                 String email = object.optString("email");
                                 String id = object.optString("id");
                                 String name = object.optString("name");
+                                String profilePicUrl = "";
+
+                                // GET PROFILE PICTURE FACEBOOK URL
+                                if (object.has("picture")){
+
+                                    try {
+
+                                        profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
 
 
-                                 new Get_score_user(MainActivity.this, id, email, name).execute();
-                                //     Log.d("Response", response.getInnerJsobject.toString());
+                                // GET SCORE USER PLUS INTENT TO NEW ACTIVITY
+                                 new Get_score_user(MainActivity.this, id, email, name, profilePicUrl).execute();
+
                                                            }
                         }
                     });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,email");
+            parameters.putString("fields", "id,name,email,picture.type(small)");
             request.setParameters(parameters);
             request.executeAsync();
 
@@ -89,14 +107,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         loginButton = (LoginButton)findViewById(R.id.login_button);
-
-            loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday","user_friends"));
+            // FACEBOOK PERMISSIONS
+            loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"));
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
 
 
-
+        //ON LOG IN SUCCESSFUL
             public void onSuccess(LoginResult loginResult) {
 
                 Log.i("TAG", "success");
@@ -126,25 +144,39 @@ public class MainActivity extends AppCompatActivity {
                                     String name = object.optString("name");
                                     String birthday = object.optString("birthday");
                                     String gender = object.optString("gender");
+                                    String profilePicUrl = "";
 
-                                    //add user in database
+                                    //ADD USER INTO DATABASE IN CASE DOESNT EXIST
                                     new Check_user().execute(id, email, name, birthday, gender);
+
+
+                                    if (object.has("picture")){
+
+                                        try {
+
+                                            profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+
                                     //get points, title and image file path
-                                    new Get_score_user(MainActivity.this, id, email,name).execute();
+                                    new Get_score_user(MainActivity.this, id, email,name, profilePicUrl).execute();
 
                                 }
                             }
                         });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email,gender, birthday");
+                parameters.putString("fields", "id,name,email,gender, birthday,picture.type(small)");
                 request.setParameters(parameters);
                 request.executeAsync();
 
 
 
-                Intent intent = new Intent(getApplicationContext(), Mensaje.class);
+              /*  Intent intent = new Intent(getApplicationContext(), Mensaje.class);
                                 startActivity(intent);
-
+                    */
 
             }
 
@@ -218,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-
+            //SEND DATA TO LOCAL SERVER
             Enviar_user_data(params[0],params[1],params[2],params[3],params[4]);
             return null;
 
@@ -226,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         public void Enviar_user_data(String id, String email, String name, String birthday, String gender){
-
+            //API REST CALL
             try {
                 HttpRequest con = new HttpRequest("http://192.168.0.114:80/android/Globetrotter/usercheck.php");
                 HashMap<String, String> params = new HashMap<>();

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,25 +18,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 
-
+//HOME CLASS
 public class Mensaje extends AppCompatActivity {
 
     private Button button;
@@ -50,6 +41,7 @@ public class Mensaje extends AppCompatActivity {
     private ImageView picture_score;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    ListView list_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +49,7 @@ public class Mensaje extends AppCompatActivity {
         setContentView(R.layout.activity_mensaje);
 
         Resources res = getResources();
-
+        //SETTING TABS - HOME FRIENDS AND MARKET
         TabHost tabs=(TabHost)findViewById(android.R.id.tabhost);
         tabs.setup();
 
@@ -69,7 +61,7 @@ public class Mensaje extends AppCompatActivity {
 
         spec=tabs.newTabSpec("placestab");
         spec.setContent(R.id.placetab);
-        spec.setIndicator("Places",
+        spec.setIndicator("Friends",
                 res.getDrawable(android.R.drawable.ic_dialog_map));
         tabs.addTab(spec);
 
@@ -88,6 +80,8 @@ public class Mensaje extends AppCompatActivity {
         final String name = getIntent().getStringExtra("name");
         String users_score = getIntent().getStringExtra("score");
         String users_title = getIntent().getStringExtra("title");
+        //Profile picture url user
+        String profilePicUrl = getIntent().getStringExtra("profilePicUrl");
 
         facebookname = (TextView) findViewById(R.id.textView2);
         facebookname.setText(name);
@@ -102,38 +96,15 @@ public class Mensaje extends AppCompatActivity {
         int resId = getResources().getIdentifier("ic_beginner", "mipmap", getPackageName());
         picture_score.setImageResource(resId);
 
-
-
+        // profile picture ImageView
         profileimageview = (ImageView) findViewById(R.id.imageView2);
-
-        Bundle params = new Bundle();
-        params.putString("fields", "picture.type(small)");
-        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-
-                        if (response != null) {
-                            try {
-                                JSONObject data = response.getJSONObject();
-                                if (data.has("picture")) {
-                                    String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                                     new Profile_picture(profileimageview).execute(profilePicUrl);
-                                    // set profilePic bitmap to imageview
-
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                    }
-                }}).executeAsync();
-
+        new Profile_picture(profileimageview).execute(profilePicUrl);
 
         //DATA FACEBOOK FRIENDS WITH THE APP
-        new facebook_friends().friends_get_points(AccessToken.getCurrentAccessToken());
+        list_view = (ListView) findViewById(R.id.list_view);
+        new facebook_friends(this, list_view).friends_get_points(AccessToken.getCurrentAccessToken());
 
-
+        //GET THE LOCACION IF IT HAS CHANGED
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -154,9 +125,9 @@ public class Mensaje extends AppCompatActivity {
                 pDialog.dismiss();
                 locationManager.removeUpdates(this);
 
-                //POINT OF INTEREST
+                //POINT OF INTEREST - CHECK IF YOU ARE NEAR TO A POINT OF INTEREST
                 new Point_of_interest(Mensaje.this).execute(id);
-                //Country - Continent - city
+                //Country - Continent - city // CHECK IF YOU ARE IN A NEW COUNTRY OR CONTINENT OR CITY
                 new EnviarDatos(Mensaje.this).execute(id,email, name,latitude, longitude);
 
             }
@@ -200,6 +171,7 @@ public class Mensaje extends AppCompatActivity {
         }
     }
 
+    //BUTTON SET ON CLICK LISTENER
     private void configureButton(){
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +183,7 @@ public class Mensaje extends AppCompatActivity {
 
             }
     }
-
+    // SEND LOCATION TO THE SERVER. RETRIEVES JSON WITH POINTS EARNED AND A MESSAGE
     class EnviarDatos extends AsyncTask<String, String, JSONObject>{
         private Context context;
 
@@ -259,8 +231,6 @@ public class Mensaje extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
-
         }
 
 
@@ -275,10 +245,8 @@ public class Mensaje extends AppCompatActivity {
                 params.put("latitude", latitude);
                 params.put("longitude", longitude);
 
-                //con.preparePost().withData("id="+id+"&email="+email+"&name="+name+"&latitude="+latitude+"&longitude="+longitude).send();
              JSONObject object = con.preparePost().withData(params).sendAndReadJSON();
                 return object;
-
 
 
             }catch (Exception e) {
