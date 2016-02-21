@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:id="@+id/facebook_pic"
+        android:layout_alignParentLeft="true"
+      />
+
+    <TextView
+        android:layout_width="175dp"
+        android:layout_height="50dp"
+        android:id="@+id/name"
+        android:layout_toRightOf="@+id/facebook_pic"
+        android:text="name"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="175dp"
+        android:layout_height="50dp"
+        android:id="@+id/points"
+        android:layout_toRightOf="@+id/name"
+        android:text="Puntos"
+        android:gravity="center"
+
+        />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#D3D3D3"
+        android:layout_below="@+id/facebook_pic"></View>
+</RelativeLayout>
