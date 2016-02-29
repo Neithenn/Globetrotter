@@ -79,12 +79,12 @@ public class facebook_friends {
         ).executeAsync();
 
         //FILL UP URLS FROM IDS
-        int j = 0;
+        /*int j = 0;
         for (String id : ids) {
            if (id != ""){
             urls[j] = get_fc_profile_pic_friends(token, ids[j]);
            } j++;
-        }
+        }*/
 
         int i = 0;
         // CREATE A NEW ADAPTER FOR A LIST VIEW CALLING PROPER LAYOUT

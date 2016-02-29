@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,10 +22,12 @@ public class Point_of_interest extends AsyncTask<String, String, JSONObject> {
 
     private Context context;
     private String id_facebook;
+    private TextView score_tx;
 
 
-    public Point_of_interest(Context context){
+    public Point_of_interest(Context context, TextView score_tx){
         this.context=context;
+        this.score_tx=score_tx;
     }
     @Override
     protected JSONObject doInBackground(String... params) {
@@ -119,6 +122,11 @@ public class Point_of_interest extends AsyncTask<String, String, JSONObject> {
                     System.out.println(points);
                     System.out.println(name_poi);
                     String string_points = String.valueOf(points);
+
+                    String aux = score_tx.getText().toString();
+                    int old_score = Integer.parseInt(aux);
+                    int new_score = old_score + points;
+                    score_tx.setText(String.valueOf(new_score));
 
                     new Send_points(context).execute(id_facebook,place_id,name_poi,string_points);
 

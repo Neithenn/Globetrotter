@@ -5,13 +5,44 @@
     <string name="title_activity_mensaje">Mensaje</string>
     <string name="ok_button">Cool!</string>
     <string name="title">G l o b e t r o t t e r</string>
-    <string name="Button_loc">Get your location!</string>
+    <string name="Button_loc">Go!</string>
     <string name="points_txt">Score:</string>
     <string name="Globettroter">The globetrotter</string>
     <string name="adventure">Adventure</string>
     <string name="Beginner">Beginner</string>
     <string name="traveler">Unseasable Traveler</string>
     <string name="wanderlust">The Wanderlust</string>
-    <string name="paris">Paris</string>
+    <string name="backpacker">Backpacker</string>
     <string name="tx_listview">Facebook friends list</string>
+    <string name="p150000">150000</string>
+    <string name="p100000">100000</string>
+    <string name="p75000">75000</string>
+    <string name="p50000">50000</string>
+    <string name="p30000">30000</string>
+    <string name="p10000">10000</string>
+    <string name="p500">Free</string>
+    <string name="trophies">Trophies</string>
+    <string-array name="scores">
+        <item>0</item>
+        <item>10000</item>
+        <item>30000</item>
+        <item>50000</item>
+        <item>75000</item>
+        <item>100000</item>
+        <item>150000</item>
+    </string-array>
+    <string-array name="user_titles">
+        <item>Beginner</item>
+        <item>Backpacker</item>
+        <item>Adventurer</item>
+        <item>Unseasable Traveler</item>
+        <item>The Wanderlust</item>
+        <item>The Globetrotter</item>
+    </string-array>
+    <string name="user_title_cero">Buy a new title!</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>

@@ -17,10 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 
@@ -30,17 +32,21 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 //HOME CLASS
-public class Mensaje extends AppCompatActivity {
+public class Mensaje extends AppCompatActivity implements View.OnClickListener {
 
     private Button button;
-    private TextView textview;
     private TextView score;
     private TextView title;
     private TextView facebookname;
-    private ImageView profileimageview;
     private ImageView picture_score;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private ImageButton globetrotter_bt;
+    private ImageButton adveturer_bt;
+    private ImageButton wanderlust_bt;
+    private ImageButton traveler_bt;
+    private ImageButton backpacker_bt;
+    private ImageButton beginner_bt;
     ListView list_view;
 
     @Override
@@ -78,7 +84,8 @@ public class Mensaje extends AppCompatActivity {
         final String id = getIntent().getStringExtra("id");
         final String email = getIntent().getStringExtra("email");
         final String name = getIntent().getStringExtra("name");
-        String users_score = getIntent().getStringExtra("score");
+        final String users_score = getIntent().getStringExtra("score");
+        String img_name = getIntent().getStringExtra("file_name");
         String users_title = getIntent().getStringExtra("title");
         //Profile picture url user
         String profilePicUrl = getIntent().getStringExtra("profilePicUrl");
@@ -86,18 +93,34 @@ public class Mensaje extends AppCompatActivity {
         facebookname = (TextView) findViewById(R.id.textView2);
         facebookname.setText(name);
         score = (TextView) findViewById(R.id.score_txt_result);
-        score.setText("Score: "+users_score);
+        score.setText(users_score);
         title = (TextView) findViewById(R.id.title_user);
         title.setText(users_title);
 
         picture_score = (ImageView) findViewById(R.id.picture_score);
-        //picture_score.setImageResource(R.mipmap.ic_beginner);
 
-        int resId = getResources().getIdentifier("ic_beginner", "mipmap", getPackageName());
-        picture_score.setImageResource(resId);
+
+        if (img_name != null) {
+            int resId = getResources().getIdentifier(img_name, "mipmap", getPackageName());
+            picture_score.setImageResource(resId);
+        }
+
+        //Imagebuttons set on click listener
+        globetrotter_bt = (ImageButton) findViewById(R.id.globtrotter_icon);
+        globetrotter_bt.setOnClickListener(this);
+        adveturer_bt = (ImageButton) findViewById(R.id.adventure);
+        adveturer_bt.setOnClickListener(this);
+        wanderlust_bt = (ImageButton) findViewById(R.id.wanderlust_icon);
+        wanderlust_bt.setOnClickListener(this);
+        traveler_bt = (ImageButton) findViewById(R.id.traveler_icon);
+        traveler_bt.setOnClickListener(this);
+        backpacker_bt = (ImageButton) findViewById(R.id.backpacker_icon);
+        backpacker_bt.setOnClickListener(this);
+        beginner_bt = (ImageButton) findViewById(R.id.beginner_icon);
+        beginner_bt.setOnClickListener(this);
 
         // profile picture ImageView
-        profileimageview = (ImageView) findViewById(R.id.imageView2);
+        ImageView profileimageview = (ImageView) findViewById(R.id.imageView2);
         new Profile_picture(profileimageview).execute(profilePicUrl);
 
         //DATA FACEBOOK FRIENDS WITH THE APP
@@ -126,9 +149,9 @@ public class Mensaje extends AppCompatActivity {
                 locationManager.removeUpdates(this);
 
                 //POINT OF INTEREST - CHECK IF YOU ARE NEAR TO A POINT OF INTEREST
-                new Point_of_interest(Mensaje.this).execute(id);
+                new Point_of_interest(Mensaje.this,score).execute(id);
                 //Country - Continent - city // CHECK IF YOU ARE IN A NEW COUNTRY OR CONTINENT OR CITY
-                new EnviarDatos(Mensaje.this).execute(id,email, name,latitude, longitude);
+                new EnviarDatos(Mensaje.this, users_score, score).execute(id,email, name,latitude, longitude);
 
             }
 
@@ -182,13 +205,148 @@ public class Mensaje extends AppCompatActivity {
         });
 
             }
+
+    @Override
+    public void onClick(View v) {
+
+        Resources res = getResources();
+        String[] scores = res.getStringArray(R.array.scores);
+        String value = title.getText().toString();
+        int int_score = Integer.parseInt(score.getText().toString());
+
+        Log.i("TAG", "Boton funciona!");
+
+        switch (v.getId()){
+            case R.id.globtrotter_icon:
+                if (int_score >= 150000 && value != "THE GLOBETROTTER" ){
+                    //Todo ok
+                    Toast.makeText(this, "Congratz!! YOU ARE THE GLOBETROTTER!!", Toast.LENGTH_SHORT).show();
+                    int resId = getResources().getIdentifier("ic_globetrotter", "mipmap", getPackageName());
+                    picture_score.setImageResource(resId);
+                    title.setText("THE GLOBETROTTER");
+
+                }else if (value == "THE GLOBETROTTER"){
+                    //have it
+                    Toast.makeText(this, "Got it!", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    //too low
+                    Log.i("TAG", "Boton funciona! 2");
+                    Toast.makeText(this, "Not enough points!", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case R.id.adventure:
+                if (int_score >= 100000 && int_score < 150000 && value != "ADVENTURER"){
+                    //Todo ok
+                    Toast.makeText(this, "Congratz!! Now you are an adventurer!!", Toast.LENGTH_SHORT).show();
+                    int resId = getResources().getIdentifier("ic_adventure", "mipmap", getPackageName());
+                    picture_score.setImageResource(resId);
+                    title.setText("ADVENTURER");
+
+                }else if(int_score > 150000){
+                    //too high
+                    Toast.makeText(this, "get the next title!!", Toast.LENGTH_SHORT).show();
+                }else if(value == "ADVENTURER"){
+
+                    //have it
+                    Toast.makeText(this, "Got it!", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    //too low
+                    Toast.makeText(this, "Not enough points!", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case R.id.wanderlust_icon:
+                if (int_score >= 75000 && int_score < 100000 && value != "WANDERLUST" ){
+                    //Todo ok
+                    Toast.makeText(this, "Congratz!! Now you are the wanderlust!!", Toast.LENGTH_SHORT).show();
+                    int resId = getResources().getIdentifier("ic_wanderlust", "mipmap", getPackageName());
+                    picture_score.setImageResource(resId);
+                    title.setText("WANDERLUST");
+
+                }else if(int_score > 100000){
+                    //too high
+                    Toast.makeText(this, "get the next title!!", Toast.LENGTH_SHORT).show();
+
+                }else if (value == "WUNDERLUST"){
+                    //have it
+                     Toast.makeText(this, "Got it!", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    //too low
+                    Toast.makeText(this, "Not enough points!", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case R.id.traveler_icon:
+                if (int_score >= 50000 && int_score < 75000 && value != "Unseasable traveler"){
+                    //Todo ok
+                    Toast.makeText(this, "Congratz!! Now you are an unseasable traveler!!", Toast.LENGTH_SHORT).show();
+                    int resId = getResources().getIdentifier("ic_traveler", "mipmap", getPackageName());
+                    picture_score.setImageResource(resId);
+                    title.setText("Unseasable traveler");
+
+                }else if(int_score > 75000){
+                    //too high
+                    Toast.makeText(this, "get the next title!!", Toast.LENGTH_SHORT).show();
+                }else if (value == "Unseasable traveler"){
+                    //have it
+                    Toast.makeText(this, "Got it!", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    //too low
+                    Toast.makeText(this, "Not enough points!", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case R.id.backpacker_icon:
+                if (int_score >= 30000 && int_score < 50000 && value != "BACKPACKER"){
+                    //Todo ok
+                    Toast.makeText(this, "Congratz!! Now you are a backpacker!!", Toast.LENGTH_SHORT).show();
+                    int resId = getResources().getIdentifier("ic_backpacker", "mipmap", getPackageName());
+                    picture_score.setImageResource(resId);
+                    title.setText("BACKPACKER");
+
+                }else if(int_score > 50000){
+                    //too high
+                    Toast.makeText(this, "get the next title!!", Toast.LENGTH_SHORT).show();
+                }else if (value == "BACKPACKER"){
+                    //have it
+                    Toast.makeText(this, "Got it!", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    //too low
+                    Toast.makeText(this, "Not enough points!", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case R.id.beginner_icon:
+
+                if (int_score < 30000){
+
+                    Toast.makeText(this, "welcome to the world of travelers!! Move out to get points!", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+
+
+
+        }
     }
+}
     // SEND LOCATION TO THE SERVER. RETRIEVES JSON WITH POINTS EARNED AND A MESSAGE
     class EnviarDatos extends AsyncTask<String, String, JSONObject>{
         private Context context;
+        String user_points;
+        TextView score_tx;
 
-        public EnviarDatos(Context context){
+        //CONSTRUCTOR
+        public EnviarDatos(Context context, String user_points, TextView score_tx){
             this.context=context;
+            this.user_points=user_points;
+            this.score_tx=score_tx;
         }
 
         @Override
@@ -225,6 +383,21 @@ public class Mensaje extends AppCompatActivity {
                     if (!"".equals(result.getString("message1"))){
                     intent.putExtra("msg", result.getString("message1"));
                     context.startActivity(intent);}
+
+                    //POINTS
+                    if (!"0".equals(result.getString("points"))){
+                        int aux;
+                        int sum;
+                        if (user_points != null){
+                            aux = Integer.parseInt(user_points);
+                            sum = Integer.parseInt(result.getString("points")) + aux;
+                            user_points = String.valueOf(sum);
+                            score_tx.setText(user_points);
+
+                        }
+
+
+                    }
 
 
                 } catch (JSONException e) {
