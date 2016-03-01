@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,10 +32,12 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+
 //HOME CLASS
-public class Mensaje extends AppCompatActivity implements View.OnClickListener {
+public class Mensaje extends FragmentActivity implements View.OnClickListener {
 
     private Button button;
+    String id = "";
     private TextView score;
     private TextView title;
     private TextView facebookname;
@@ -81,7 +84,7 @@ public class Mensaje extends AppCompatActivity implements View.OnClickListener {
 
         button = (Button) findViewById(R.id.locacion);
 
-        final String id = getIntent().getStringExtra("id");
+        id = getIntent().getStringExtra("id");
         final String email = getIntent().getStringExtra("email");
         final String name = getIntent().getStringExtra("name");
         final String users_score = getIntent().getStringExtra("score");
@@ -194,6 +197,11 @@ public class Mensaje extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+
+    public String getMyData(){
+        return id;
+    }
+
     //BUTTON SET ON CLICK LISTENER
     private void configureButton(){
         button.setOnClickListener(new View.OnClickListener() {
@@ -270,7 +278,7 @@ public class Mensaje extends AppCompatActivity implements View.OnClickListener {
                     //too high
                     Toast.makeText(this, "get the next title!!", Toast.LENGTH_SHORT).show();
 
-                }else if (value == "WUNDERLUST"){
+                }else if (value == "WANDERLUST"){
                     //have it
                      Toast.makeText(this, "Got it!", Toast.LENGTH_SHORT).show();
 
