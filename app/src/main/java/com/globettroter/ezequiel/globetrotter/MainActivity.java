@@ -4,11 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private LoginButton loginButton = null;
     private CallbackManager callbackManager;
     private ProgressDialog pDialog;
+    private TextView no_internet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +66,14 @@ public class MainActivity extends AppCompatActivity {
                                 JSONObject object,
                                 GraphResponse response) {
                             pDialog.dismiss();
-                            Log.d("Response", response.getJSONObject().toString());
+
                             if (response.getError() != null) {
                                 // handle error
                                 Log.e("Error", "Error graph data facebook");
 
                             } else {
+
+                                Log.d("Response", response.getJSONObject().toString());
                                 String email = object.optString("email");
                                 String id = object.optString("id");
                                 String name = object.optString("name");
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
 
-
+        Log.i("LOG IN", "Not already logged in");
         loginButton = (LoginButton)findViewById(R.id.login_button);
             // FACEBOOK PERMISSIONS
             loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"));
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
 
 
-        //ON LOG IN SUCCESSFUL
+            //ON LOG IN SUCCESSFUL
             public void onSuccess(LoginResult loginResult) {
 
                 Log.i("TAG", "success");
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                     JSONObject object,
                                     GraphResponse response) {
                                 pDialog.dismiss();
-                                Log.d("Response",response.getJSONObject().toString());
+                                Log.d("Response", response.getJSONObject().toString());
                                 if (response.getError() != null) {
                                     // handle error
                                 } else {
@@ -150,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                                     new Check_user().execute(id, email, name, birthday, gender);
 
 
-                                    if (object.has("picture")){
+                                    if (object.has("picture")) {
 
                                         try {
 
@@ -162,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
                                     //get points, title and image file path
-                                    new Get_score_user(MainActivity.this, id, email,name, profilePicUrl).execute();
+                                    new Get_score_user(MainActivity.this, id, email, name, profilePicUrl).execute();
 
                                 }
                             }
@@ -192,6 +196,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+        // Text View NO INTERNET CONNECTION
+        no_internet = (TextView) findViewById(R.id.noInternet_tx);
+        no_internet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent  = new Intent(MainActivity.this, No_Internet.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -226,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.i("onresume", "facebookon resume");
         // Logs 'install' and 'app activate' App Events.
         AppEventsLogger.activateApp(this);
     }
@@ -234,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
+        Log.i("onpause", "facebookon pause");
         // Logs 'app deactivate' App Event.
         AppEventsLogger.deactivateApp(this);
     }
@@ -260,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
         public void Enviar_user_data(String id, String email, String name, String birthday, String gender){
             //API REST CALL
             try {
-                HttpRequest con = new HttpRequest("http://192.168.0.114:80/android/Globetrotter/usercheck.php");
+                HttpRequest con = new HttpRequest("http://globetrotterdomain.co.nf/usercheck.php");
                 HashMap<String, String> params = new HashMap<>();
                 params.put("id",id);
                 params.put("email",email);

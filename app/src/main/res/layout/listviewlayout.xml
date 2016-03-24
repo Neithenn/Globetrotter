@@ -9,19 +9,33 @@
         android:layout_alignParentLeft="true"
       />
 
-    <TextView
+    <LinearLayout
         android:layout_width="175dp"
         android:layout_height="50dp"
-        android:id="@+id/name"
-        android:layout_toRightOf="@+id/facebook_pic"
-        android:text="name"
-        android:gravity="center"/>
+        android:orientation="vertical"
+        android:id="@+id/linear"
+        android:layout_toEndOf="@+id/facebook_pic">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/name"
+                    android:text="user name" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="user title"
+                    android:id="@+id/user_title_tx" />
+    </LinearLayout>
+
 
     <TextView
         android:layout_width="175dp"
         android:layout_height="50dp"
         android:id="@+id/points"
-        android:layout_toRightOf="@+id/name"
+        android:layout_toRightOf="@+id/linear"
         android:text="Puntos"
         android:gravity="center"
 
@@ -31,5 +45,6 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#D3D3D3"
-        android:layout_below="@+id/facebook_pic"></View>
+        android:layout_below="@+id/facebook_pic"
+        android:id="@+id/view"></View>
 </RelativeLayout>

@@ -1,7 +1,6 @@
 package com.globettroter.ezequiel.globetrotter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -80,8 +79,8 @@ public class facebook_friends {
 
                                 if  (name != "" && name != null){
 
-                                    FacebookDataConteiner facebook_obj = new FacebookDataConteiner(urls[i], name, ids[i]);
-                                    adapter.add(facebook_obj);}
+                                new Get_score_friend(ids[i],name, adapter).execute();
+                                }
                                 i++;
 
                             }
@@ -92,38 +91,8 @@ public class facebook_friends {
         ).executeAsync();
 
 
-
-
     }
 
-    public String get_fc_profile_pic_friends (AccessToken token, String id_facebook){
-
-        final String[] url_result = new String[1];
-        String params = "/"+id_facebook+"/picture";
-        Bundle param = new Bundle();
-        param.putBoolean("redirect", false);
-
-        new GraphRequest(token,
-               params,
-                param,
-                HttpMethod.GET,
-        new GraphRequest.Callback() {
-            @Override
-            public void onCompleted(GraphResponse response) {
-
-                try {
-                   String url2 = response.getJSONObject().getJSONObject("data").getString("url");
-                    url_result[0] = url2;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }).executeAsync();
-
-
-        return url_result[0];
-    }
 
 
 }

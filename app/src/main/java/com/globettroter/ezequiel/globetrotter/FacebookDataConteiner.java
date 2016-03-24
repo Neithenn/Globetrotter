@@ -5,20 +5,21 @@ package com.globettroter.ezequiel.globetrotter;
  */
 public class FacebookDataConteiner {
 
-    private String url_picture;
+    //private String url_picture;
     private String name;
     private String id;
+    private String title;
+    private String points;
 
 
-    public FacebookDataConteiner(String url_picture, String name, String id) {
-        this.url_picture = url_picture;
+    public FacebookDataConteiner( String name, String id, String title, String points) {
+       // this.url_picture = url_picture;
         this.name = name;
         this.id = id;
+        this.title=title;
+        this.points=points;
     }
 
-    public String getUrl_picture() {
-        return url_picture;
-    }
 
     public String getName() {
         return name;
@@ -28,9 +29,6 @@ public class FacebookDataConteiner {
         return id;
     }
 
-    public void setUrl_picture(String url_picture) {
-        this.url_picture = url_picture;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -38,5 +36,21 @@ public class FacebookDataConteiner {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPoints() {
+        return points;
+    }
+
+    public void setPoints(String points) {
+        this.points = points;
     }
 }

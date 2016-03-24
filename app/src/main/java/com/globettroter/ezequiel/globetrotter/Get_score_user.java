@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -37,7 +38,7 @@ public class Get_score_user extends AsyncTask <String, String, String[]>{
             String[] array;
 
             try {
-                HttpRequest con = new HttpRequest("http://192.168.0.114:80/android/Globetrotter/get_data_user.php");
+                HttpRequest con = new HttpRequest("http://globetrotterdomain.co.nf/get_data_user.php");
                 HashMap<String, String> parameter = new HashMap<>();
                 parameter.put("id_facebook", id);
 
@@ -56,13 +57,17 @@ public class Get_score_user extends AsyncTask <String, String, String[]>{
 
             }catch (Exception e){
                 e.printStackTrace();
-                return null;
+                return array = new String[] {"ERROR"};
             }
     }
 
     @Override
     protected void onPostExecute(String[] array) {
         super.onPostExecute(array);
+
+        Log.i(" poINTS", "GETTING USER SCORE");
+
+        if (array[0] != "ERROR"){
 
             Intent intent = new Intent(context, Mensaje.class);
             intent.putExtra("id", id);
@@ -75,8 +80,13 @@ public class Get_score_user extends AsyncTask <String, String, String[]>{
                 intent.putExtra("file_name", array[2]);
 
             }
-            context.startActivity(intent);
+            context.startActivity(intent);}
+        else{
+         Log.e("ERROR","CANT CONNECT TO LOCAL SERVER");
+            Toast.makeText(context, "We couldn't connect to server", Toast.LENGTH_SHORT).show();
+            }
+        }
 
     }
-}
+
 

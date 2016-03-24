@@ -3,6 +3,7 @@ package com.globettroter.ezequiel.globetrotter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.net.URL;
 
 /**
  * Created by Ezequiel on 23/01/2016.
- * FILL UP THE IMAGE VIEW FROM MENSAJE.JAVA
+ * FILL UP THE IMAGE VIEW of MENSAJE.JAVA
  */
 public class Profile_picture extends AsyncTask <String, String, Bitmap> {
 
@@ -27,24 +28,34 @@ public class Profile_picture extends AsyncTask <String, String, Bitmap> {
 
     protected Bitmap doInBackground(String... params) {
 
-        try {
-            URL url = new URL(params[0]);
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
+            if (params[0] != null) {
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
+                try {
+
+                    Log.i("facebook pic url", params[0]);
+                URL url = new URL(params[0]);
+
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+
+            }catch(MalformedURLException e){
+                e.printStackTrace();
+                return null;
+            }catch(IOException e){
+                e.printStackTrace();
+                return null;
+            }
+
+        }else{
+        Log.e("ERROR", "No URL en Profile picture");
             return null;
         }
-
 
     }
 
