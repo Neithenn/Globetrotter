@@ -21,6 +21,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,10 +33,12 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".Mensaje"
             android:label="@string/title_activity_mensaje"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
@@ -44,7 +47,8 @@
         </activity>
         <activity
             android:name=".Popup"
-            android:theme="@style/AppTheme.CustomTheme" >
+            android:theme="@style/AppTheme.CustomTheme"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".No_Internet" >
         </activity>

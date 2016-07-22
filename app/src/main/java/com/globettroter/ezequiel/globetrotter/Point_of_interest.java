@@ -165,7 +165,7 @@ public class Point_of_interest extends AsyncTask<String, String, JSONObject> {
 
                 String string_types = obj.getString("types");
 
-                while(check==true){
+                while(check==true && i<5){
                     if (string_types.contains(types_values[i])){
                         check = false;
                         Log.i("point of interest", "return false containts "+types_values[i]);

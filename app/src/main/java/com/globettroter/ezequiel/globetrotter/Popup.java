@@ -1,10 +1,9 @@
 package com.globettroter.ezequiel.globetrotter;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -17,8 +16,10 @@ public class Popup extends Mensaje {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.popup_points);
+        Typeface tf_verdana  = Typeface.createFromAsset(getAssets(), "fonts/Verdana.ttf");
         TextView tx =(TextView) findViewById(R.id.msgText);
-        Button bt_ok = (Button) findViewById(R.id.ok_button);
+        tx.setTypeface(tf_verdana);
+
         String msg = getIntent().getStringExtra("msg");
 
         Log.i("MSG", " " + msg);
@@ -30,17 +31,7 @@ public class Popup extends Mensaje {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width*.8),(int)(height*.2));
-
-        bt_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                finish();
-
-
-            }
-        });
+        getWindow().setLayout((int) (width * .8), (int) (height * .2));
 
     }
 }

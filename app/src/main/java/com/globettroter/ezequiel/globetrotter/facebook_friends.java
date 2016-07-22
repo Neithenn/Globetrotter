@@ -34,8 +34,8 @@ public class facebook_friends {
         final String[] urls = new String[20];
 
         new GraphRequest(
-                token,
-                "/me/friends/",
+                AccessToken.getCurrentAccessToken(),
+                "/me/friends",
                 null,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:id="@+id/imageView2"
+        android:src="@mipmap/ic_coin"
+        android:layout_gravity="center"
+        android:layout_toStartOf="@+id/points_tx"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="200000"
+        android:id="@+id/points_tx"
+        android:textSize="30dp"
+        android:layout_gravity="center"
+        android:textColor="@color/dark_grey"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="12dp"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/place_name_tx"
+        android:textSize="18dp"
+        android:textStyle="bold"
+      android:layout_alignParentStart="true"
+        android:textColor="@color/dark_grey"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/date_tx"
+        android:textSize="14dp"
+        android:textColor="@color/dark_grey"
+        android:layout_below="@+id/place_name_tx"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="12dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/achiev_title"
+        android:layout_below="@+id/date_tx"
+        android:textColor="@color/red"
+        android:layout_marginStart="12dp"
+        />
+
+
+</RelativeLayout>

@@ -3,27 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/background">
 
-
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.8"
-        android:id="@+id/imageView"
-        android:src="@mipmap/ic_briefcase"
-        android:layout_gravity="center_horizontal" />
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title"
-        android:id="@+id/textView"
+        android:id="@+id/globetrotter_title"
         android:layout_gravity="center_horizontal"
         android:textSize="24dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginTop="150dp"/>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
@@ -31,7 +24,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.6"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="56dp" />
+        android:layout_marginTop="250dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -40,8 +33,9 @@
         android:textSize="16dp"
         android:text="@string/no_internet"
         android:textColor="@color/blueSky"
-        android:layout_marginTop="54dp"
+        android:layout_marginTop="30dp"
         android:textAlignment="center"
+
 
         />
 

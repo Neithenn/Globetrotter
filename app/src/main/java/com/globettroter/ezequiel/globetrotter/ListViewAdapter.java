@@ -95,7 +95,7 @@ public class ListViewAdapter extends ArrayAdapter {
     public void get_fc_profile_pic_friends (AccessToken token, String id_facebook, final ImageView facebook_pic){
 
 
-        String params = "/"+id_facebook+"/picture";
+        String params = "/"+id_facebook+"/picture?type=normal&";
         Bundle param = new Bundle();
         param.putBoolean("redirect", false);
 

@@ -2,6 +2,7 @@ package com.globettroter.ezequiel.globetrotter;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private ProgressDialog pDialog;
     private TextView no_internet;
+    private TextView globetrotter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_main);
+
+        Typeface tf  = Typeface.createFromAsset(getAssets(), "fonts/cour.ttf");
+        globetrotter = (TextView) findViewById(R.id.globetrotter_title);
+        globetrotter.setTypeface(tf);
+
 
 // IF USER IS ALREADY LOGGED IN
         if (isFacebookLoggedIn()) {
@@ -100,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,email,picture.type(small)");
+            parameters.putString("fields", "id,name,email,picture.type(large)");
             request.setParameters(parameters);
             request.executeAsync();
 
@@ -172,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email,gender, birthday,picture.type(small)");
+                parameters.putString("fields", "id,name,email,gender, birthday,picture.type(large)");
                 request.setParameters(parameters);
                 request.executeAsync();
 

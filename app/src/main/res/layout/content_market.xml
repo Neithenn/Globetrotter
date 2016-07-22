@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="34dp"
+        android:id="@+id/tx_trophies"
+        android:text="@string/trophies"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="23dp"
+
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/globtrotter_icon"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_globetrotter"
+            android:contentDescription="icon globettroter"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"/>
+
+        <ImageButton
+            android:id="@+id/adventure"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_adventure"
+            android:contentDescription="Icon adventure"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"/>
+
+        <ImageButton
+            android:id="@+id/wanderlust_icon"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_wanderlust"
+            android:contentDescription="icon wanderlust"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/tx_globetrotter"
+            android:text="@string/Globettroter"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/tx_adventure"
+            android:text="@string/adventure"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/tx_wanderlust"
+            android:text="@string/wanderlust"
+            android:textAlignment="center"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/p150000"
+            android:text="@string/p150000"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/p100000"
+            android:text="@string/p100000"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/p750000"
+            android:text="@string/p75000"
+            android:textAlignment="center"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+        <ImageButton
+            android:id="@+id/traveler_icon"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_traveler"
+            android:contentDescription="icon traveler"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
+            />
+
+
+        <ImageButton
+            android:id="@+id/backpacker_icon"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_backpacker"
+            android:contentDescription="Icon backpacker"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white"/>
+
+
+        <ImageButton
+            android:id="@+id/beginner_icon"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_beginner"
+            android:contentDescription="icon beginner"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:background="@color/white" />
+        </LinearLayout>
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/tx_traveler"
+                android:text="@string/traveler"
+                android:textAlignment="center"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/tx_backpacker"
+                android:text="@string/backpacker"
+                android:textAlignment="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/tx_beginner"
+            android:text="@string/Beginner"
+            android:textAlignment="center"/>
+
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/p50000"
+            android:text="@string/p50000"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/p30000"
+            android:text="@string/p30000"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/p500"
+            android:text="@string/p500"
+            android:textAlignment="center"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

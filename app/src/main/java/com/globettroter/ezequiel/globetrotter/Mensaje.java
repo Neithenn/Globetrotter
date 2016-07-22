@@ -11,13 +11,17 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -28,7 +32,7 @@ import com.facebook.AccessToken;
 //HOME CLASS
 public class Mensaje extends FragmentActivity implements View.OnClickListener {
 
-    private Button button;
+    private FloatingActionButton fab;
     String id;
     private TextView score;
     private TextView title;
@@ -36,7 +40,9 @@ public class Mensaje extends FragmentActivity implements View.OnClickListener {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private ProgressDialog pDialog;
-
+    private LinearLayout layout_background;
+    //ANIMATION AND FAB
+    private Animation animRotate;
     ListView list_view;
 
     @Override
@@ -51,25 +57,25 @@ public class Mensaje extends FragmentActivity implements View.OnClickListener {
 
         TabHost.TabSpec spec=tabs.newTabSpec("hometab");
         spec.setContent(R.id.hometab);
-        spec.setIndicator("Home",
-                res.getDrawable(android.R.drawable.ic_dialog_map));
+        spec.setIndicator("",
+                ContextCompat.getDrawable(Mensaje.this, R.drawable.ic_home_black_24dp));
         tabs.addTab(spec);
 
         spec=tabs.newTabSpec("placestab");
         spec.setContent(R.id.placetab);
-        spec.setIndicator("Friends",
-                res.getDrawable(android.R.drawable.ic_dialog_map));
+        spec.setIndicator("",
+                ContextCompat.getDrawable(Mensaje.this, R.mipmap.ic_tag_faces_black_24dp));
         tabs.addTab(spec);
 
         spec=tabs.newTabSpec("markettab");
         spec.setContent(R.id.markettab);
-        spec.setIndicator("Market",
-                res.getDrawable(android.R.drawable.ic_dialog_map));
+        spec.setIndicator("",
+                ContextCompat.getDrawable(Mensaje.this, R.mipmap.ic_store_black_24dp));
         tabs.addTab(spec);
 
         tabs.setCurrentTab(0);
-
-        button = (Button) findViewById(R.id.locacion);
+        animRotate =  AnimationUtils.loadAnimation(this, R.anim.anim_rotate);
+        fab = (FloatingActionButton) findViewById(R.id.location);
 
         id = getIntent().getStringExtra("id");
         final String email = getIntent().getStringExtra("email");
@@ -94,32 +100,52 @@ public class Mensaje extends FragmentActivity implements View.OnClickListener {
             picture_score.setImageResource(resId);
         }
 
-        //Imagebuttons set on click listener
-        ImageButton globetrotter_bt = (ImageButton) findViewById(R.id.globtrotter_icon);
-        globetrotter_bt.setOnClickListener(this);
-        ImageButton adveturer_bt = (ImageButton) findViewById(R.id.adventure);
-        adveturer_bt.setOnClickListener(this);
-        ImageButton wanderlust_bt = (ImageButton) findViewById(R.id.wanderlust_icon);
-        wanderlust_bt.setOnClickListener(this);
-        ImageButton traveler_bt = (ImageButton) findViewById(R.id.traveler_icon);
-        traveler_bt.setOnClickListener(this);
-        ImageButton backpacker_bt = (ImageButton) findViewById(R.id.backpacker_icon);
-        backpacker_bt.setOnClickListener(this);
-        ImageButton beginner_bt = (ImageButton) findViewById(R.id.beginner_icon);
-        beginner_bt.setOnClickListener(this);
+        //DEPEND ON USER TITLE GET BACKGROUND LAYOUT
+
+        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+
+                switch (tabId){
+                    case "markettab":
+                        //Imagebuttons set on click listener
+                        ImageButton globetrotter_bt = (ImageButton) findViewById(R.id.globtrotter_icon);
+                        globetrotter_bt.setOnClickListener(Mensaje.this);
+                        ImageButton adveturer_bt = (ImageButton) findViewById(R.id.adventure);
+                        adveturer_bt.setOnClickListener(Mensaje.this);
+                        ImageButton wanderlust_bt = (ImageButton) findViewById(R.id.wanderlust_icon);
+                        wanderlust_bt.setOnClickListener(Mensaje.this);
+                        ImageButton traveler_bt = (ImageButton) findViewById(R.id.traveler_icon);
+                        traveler_bt.setOnClickListener(Mensaje.this);
+                        ImageButton backpacker_bt = (ImageButton) findViewById(R.id.backpacker_icon);
+                        backpacker_bt.setOnClickListener(Mensaje.this);
+                        ImageButton beginner_bt = (ImageButton) findViewById(R.id.beginner_icon);
+                        beginner_bt.setOnClickListener(Mensaje.this);
+
+                    break;
+                    case "placestab":
+                        //DATA FACEBOOK FRIENDS WITH THE APP
+
+                        break;
+                }
+            }
+        });
+
+
 
         // profile picture ImageView
-        ImageView profileimageview = (ImageView) findViewById(R.id.imageView2);
+        ImageView profileimageview = (ImageView) findViewById(R.id.profilefacebookpic);
         new Profile_picture(profileimageview).execute(profilePicUrl);
 
-        //DATA FACEBOOK FRIENDS WITH THE APP
-        list_view = (ListView) findViewById(R.id.list_view);
-        new facebook_friends(this, list_view).friends_get_points(AccessToken.getCurrentAccessToken());
 
 
         //CHECK INTERNAL MEMORY IF THERE IS ANY LOCATION SAVED BEFORE
         new get_internal_memory(Mensaje.this, score).memory_access(id, users_score, email, name);
 
+
+        //FACEBOOK FRIENDS LIST VIEW
+        list_view = (ListView) findViewById(R.id.list_view);
+        new facebook_friends(Mensaje.this, list_view).friends_get_points(AccessToken.getCurrentAccessToken());
 
         //GET THE LOCACION IF IT HAS CHANGED
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -191,9 +217,11 @@ public class Mensaje extends FragmentActivity implements View.OnClickListener {
 
     //BUTTON SET ON CLICK LISTENER
     private void configureButton(){
-        button.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                v.startAnimation(animRotate);
 
                 pDialog = new ProgressDialog(Mensaje.this);
                 pDialog.setMessage("Getting your location!!");
@@ -211,15 +239,15 @@ public class Mensaje extends FragmentActivity implements View.OnClickListener {
     protected void onStop() {
         super.onStop();
         Log.i("ONSTOP", "START SERVICE");
-        Intent intent2 = new Intent(this, LocationListener_Service.class);
-        startService(intent2);
+        //Intent intent2 = new Intent(this, LocationListener_Service.class);
+        //startService(intent2);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(this,LocationListener_Service.class);
-        stopService(intent);
+      //  Intent intent = new Intent(this,LocationListener_Service.class);
+        //stopService(intent);
     }
 
     @Override
@@ -235,6 +263,7 @@ public class Mensaje extends FragmentActivity implements View.OnClickListener {
 
         String value = title.getText().toString();
         int int_score = Integer.parseInt(score.getText().toString());
+        layout_background = (LinearLayout) findViewById(R.id.main_head);
 
         switch (v.getId()){
             case R.id.globtrotter_icon:
@@ -285,6 +314,7 @@ public class Mensaje extends FragmentActivity implements View.OnClickListener {
                     int resId = getResources().getIdentifier("ic_wanderlust", "mipmap", getPackageName());
                     picture_score.setImageResource(resId);
                     title.setText("WANDERLUST");
+                    layout_background.setBackground(ContextCompat.getDrawable(Mensaje.this, R.drawable.background_bangkok_th));
 
                 }else if(int_score > 100000){
                     //too high
@@ -307,11 +337,13 @@ public class Mensaje extends FragmentActivity implements View.OnClickListener {
                     int resId = getResources().getIdentifier("ic_traveler", "mipmap", getPackageName());
                     picture_score.setImageResource(resId);
                     title.setText("Unseasable traveler");
+                    layout_background.setBackground(ContextCompat.getDrawable(Mensaje.this, R.drawable.backgroun_nz_cow));
 
-                }else if(int_score > 75000){
+
+                }/*else if(int_score > 75000){
                     //too high
                     Toast.makeText(this, "get the next title!!", Toast.LENGTH_SHORT).show();
-                }else if (value == "Unseasable traveler"){
+                }*/else if (value == "Unseasable traveler"){
                     //have it
                     Toast.makeText(this, "Got it!", Toast.LENGTH_SHORT).show();
 

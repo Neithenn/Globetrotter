@@ -1,0 +1,13 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.globettroter.ezequiel.globetrotter.MyplacesFragment">
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/myplaces_id"
+        android:background="@color/white"
+        android:elevation="10dp"
+        ></ListView>
+</FrameLayout>
